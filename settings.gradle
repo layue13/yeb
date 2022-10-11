@@ -1,0 +1,4 @@
+rootProject.name = 'yeb'
+
+include 'yeb-server'
+include 'yeb-common'

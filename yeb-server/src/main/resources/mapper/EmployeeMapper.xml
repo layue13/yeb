@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.server.mapper.EmployeeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.common.pojo.Employee">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="gender" property="gender"/>
+        <result column="birthday" property="birthday"/>
+        <result column="idCard" property="idCard"/>
+        <result column="wedlock" property="wedlock"/>
+        <result column="nationId" property="nationId"/>
+        <result column="nativePlace" property="nativePlace"/>
+        <result column="politicId" property="politicId"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+        <result column="departmentId" property="departmentId"/>
+        <result column="jobLevelId" property="jobLevelId"/>
+        <result column="posId" property="posId"/>
+        <result column="engageForm" property="engageForm"/>
+        <result column="tiptopDegree" property="tiptopDegree"/>
+        <result column="specialty" property="specialty"/>
+        <result column="school" property="school"/>
+        <result column="beginDate" property="beginDate"/>
+        <result column="workState" property="workState"/>
+        <result column="workID" property="workID"/>
+        <result column="contractTerm" property="contractTerm"/>
+        <result column="conversionTime" property="conversionTime"/>
+        <result column="notWorkDate" property="notWorkDate"/>
+        <result column="beginContract" property="beginContract"/>
+        <result column="endContract" property="endContract"/>
+        <result column="workAge" property="workAge"/>
+        <result column="salaryId" property="salaryId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        , name, gender, birthday, idCard, wedlock, nationId, nativePlace, politicId, email, phone, address, departmentId, jobLevelId, posId, engageForm, tiptopDegree, specialty, school, beginDate, workState, workID, contractTerm, conversionTime, notWorkDate, beginContract, endContract, workAge, salaryId
+    </sql>
+
+    <resultMap id="Emps" type="employee" extends="BaseResultMap">
+
+        <association property="nation" javaType="nation">
+            <id column="tn_id" property="id"/>
+            <result column="tn_name" property="name"/>
+        </association>
+
+        <association property="politicsStatus" javaType="politicsStatus">
+            <id column="tps_id" property="id"/>
+            <result column="tps_name" property="name"/>
+        </association>
+
+        <association property="department" javaType="department">
+            <id column="td_id" property="id"/>
+            <result column="td_name" property="name"/>
+            <result column="td_parentId" property="parentId"/>
+            <result column="td_depPath" property="depPath"/>
+            <result column="td_enabled" property="enabled"/>
+            <result column="td_isParent" property="isParent"/>
+        </association>
+
+        <association property="joblevel" javaType="joblevel">
+            <id column="tj_id" property="id"/>
+            <result column="tj_name" property="name"/>
+            <result column="tj_titleLevel" property="titleLevel"/>
+            <result column="tj_createDate" property="createDate"/>
+            <result column="tj_enabled" property="enabled"/>
+        </association>
+
+        <association property="position" javaType="position">
+            <id column="tp_id" property="id"/>
+            <result column="tp_name" property="name"/>
+            <result column="tp_createDate" property="createDate"/>
+            <result column="tp_enabled" property="enabled"/>
+        </association>
+
+
+    </resultMap>
+
+    <select id="findAll" resultMap="Emps">
+
+        select
+        e.*,
+        tn.id tn_id,
+        tn.name tn_name,
+        tps.id tps_id,
+        tps.name tps_name,
+        td.id td_id,
+        td.name td_name,
+        td.parentId td_parentId,
+        td.depPath td_depPath,
+        td.enabled td_enabled,
+        td.isParent td_isParent,
+        tj.id tj_id,
+        tj.name tj_name,
+        tj.titleLevel tj_titleLevel,
+        tj.createDate tj_createDate,
+        tj.enabled tj_enabled,
+        tp.id tp_id,
+        tp.name tp_name,
+        tp.createDate tp_createDate,
+        tp.enabled tp_enabled
+        from t_employee e
+        left join t_nation tn on e.nationId = tn.id
+        left join t_politics_status tps on e.politicId = tps.id
+        left join t_department td on e.departmentId = td.id
+        left join t_joblevel tj on e.jobLevelId = tj.id
+        left join t_position tp on e.posId = tp.id
+        <where>
+            <if test="employee.politicId != null">and e.politicId = #{employee.politicId}</if>
+            <if test="employee.nationId != null">and e.nationId = #{employee.nationId}</if>
+            <if test="employee.posId != null">and e.posId = #{employee.posId}</if>
+            <if test="employee.jobLevelId != null">and e.jobLevelId = #{employee.jobLevelId}</if>
+            <if test="employee.engageForm != null">and e.engageForm = #{employee.engageForm}</if>
+            <if test="employee.departmentId != null">and e.departmentId = #{employee.departmentId}</if>
+            <if test="employee.name != null and employee.name != ''">and e.name like concat('%', #{employee.name},'%')
+            </if>
+            <if test="beginDateScope != null and 2 == beginDateScope">
+                and e.beginDate between #{beginDateScope[0]} and #{beginDateScope[1]}
+            </if>
+        </where>
+
+    </select>
+    <select id="findAllSimple" resultMap="Emps">
+        select e.*,
+               tn.id         tn_id,
+               tn.name       tn_name,
+               tps.id        tps_id,
+               tps.name      tps_name,
+               td.id         td_id,
+               td.name       td_name,
+               td.parentId   td_parentId,
+               td.depPath    td_depPath,
+               td.enabled    td_enabled,
+               td.isParent   td_isParent,
+               tj.id         tj_id,
+               tj.name       tj_name,
+               tj.titleLevel tj_titleLevel,
+               tj.createDate tj_createDate,
+               tj.enabled    tj_enabled,
+               tp.id         tp_id,
+               tp.name       tp_name,
+               tp.createDate tp_createDate,
+               tp.enabled    tp_enabled
+        from t_employee e
+                 left join t_nation tn on e.nationId = tn.id
+                 left join t_politics_status tps on e.politicId = tps.id
+                 left join t_department td on e.departmentId = td.id
+                 left join t_joblevel tj on e.jobLevelId = tj.id
+                 left join t_position tp on e.posId = tp.id
+    </select>
+
+</mapper>
