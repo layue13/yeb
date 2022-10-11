@@ -1,10 +1,12 @@
 package com.example.server.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class YebException extends RuntimeException {
 
     private Integer code;
