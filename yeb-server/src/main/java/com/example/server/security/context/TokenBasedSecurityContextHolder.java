@@ -1,7 +1,9 @@
 package com.example.server.security.context;
 
 import com.example.common.security.UserDetails;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TokenBasedSecurityContextHolder implements SecurityContextHolder {
 
     /**

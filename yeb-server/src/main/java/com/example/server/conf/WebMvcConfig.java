@@ -8,6 +8,7 @@ import com.example.server.security.authorize.JdbcResourceMetaDataProvider;
 import com.example.server.security.context.SecurityContextHolder;
 import com.example.server.security.context.SessionBasedSecurityContextHolder;
 import com.example.server.security.context.TokenBasedSecurityContextHolder;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -40,21 +41,21 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
     private TokenLoadingInterceptor tokenLoadingInterceptor;
 
 
-    // 相当于@Component
-    @Bean
-    public SecurityContextHolder securityContextHolder() {
-
-        if (contextType.equals("session")) {
-            return new SessionBasedSecurityContextHolder();
-        } else if (contextType.equals("token")) {
-            return new TokenBasedSecurityContextHolder();
-        } else {
-            return new SessionBasedSecurityContextHolder();
-        }
-    }
+//    // 相当于@Component
+//    @Bean
+//    public SecurityContextHolder securityContextHolder() {
+//
+//        if (contextType.equals("session")) {
+//            return new SessionBasedSecurityContextHolder();
+//        } else if (contextType.equals("token")) {
+//            return new TokenBasedSecurityContextHolder();
+//        } else {
+//            return new SessionBasedSecurityContextHolder();
+//        }
+//    }
 
     @Override
-    protected void addInterceptors(InterceptorRegistry registry) { // 添加拦截器
+    public void addInterceptors(@NotNull InterceptorRegistry registry) { // 添加拦截器
 
         authorizeInterceptor.setResourceMetaDataProvider(jdbcResourceMetaDataProvider);
         authorizeInterceptor.setAuthorizeDecider(hasAnyRoleAuthorizeDecider);
@@ -63,6 +64,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
             setInterceptorPath(registry, tokenLoadingInterceptor);
         }
+
 
         setInterceptorPath(registry, authenticatedInterceptor);
 
