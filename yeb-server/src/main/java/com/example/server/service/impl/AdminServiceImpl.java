@@ -13,13 +13,17 @@ import com.example.server.service.IAdminService;
 import com.example.server.vo.RespBean;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.codec.binary.Base64;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.crypto.spec.SecretKeySpec;
+import javax.security.auth.kerberos.EncryptionKey;
 import javax.servlet.http.HttpSession;
+import java.security.KeyFactory;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,11 +75,12 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
                 if (securityContextHolder instanceof TokenBasedSecurityContextHolder) {
 
+                    byte[] encodedKey = Base64.decodeBase64("teasdasdasdasdasdasdddddddddddddddddddddddddddddadadst");
                     // 颁发一个jwt
                     String token = Jwts.builder()
                             .setSubject(adminFromDb.getUsername())
                             .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 24 * 1000))
-                            .signWith(SignatureAlgorithm.HS256, "test").compact();
+                            .signWith(new SecretKeySpec(encodedKey,0,encodedKey.length,"HmacSHA256")).compact();
 
                     Map<String, String> params = new HashMap<>();
                     params.put("tokenHead", "Bearer");

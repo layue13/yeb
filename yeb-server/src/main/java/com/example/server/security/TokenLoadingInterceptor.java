@@ -8,11 +8,14 @@ import com.example.server.security.context.SecurityContextHolder;
 import com.example.server.service.IAdminService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.apache.commons.codec.binary.Base64;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -30,7 +33,7 @@ public class TokenLoadingInterceptor implements HandlerInterceptor {
     private RoleMapper roleMapper;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, Object handler) throws Exception {
 
         // 把token取出来
         // Bearer jwt-xxxxxxxxxx
@@ -39,9 +42,11 @@ public class TokenLoadingInterceptor implements HandlerInterceptor {
 
         if (!StringUtils.isEmpty(authorization) && !"奇怪的值".equalsIgnoreCase(authorization)) {
             String token = authorization.substring("Bearer".length());
+            byte[] encodedKey = Base64.decodeBase64("teasdasdasdasdasdasdddddddddddddddddddddddddddddadadst");
+
             // 解析jwt
             Claims claims = Jwts.parser()
-                    .setSigningKey("test")
+                    .setSigningKey(new SecretKeySpec(encodedKey,0,encodedKey.length,"HmacSHA256"))
                     .parseClaimsJws(token).getBody();
 
             // subject 用户名

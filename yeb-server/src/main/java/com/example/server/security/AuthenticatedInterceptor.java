@@ -4,6 +4,7 @@ import com.example.common.security.UserDetails;
 import com.example.server.security.context.SecurityContextHolder;
 import com.example.server.vo.RespBean;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class AuthenticatedInterceptor implements HandlerInterceptor {
     private boolean enableAuthenticated;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
 
         if (handler instanceof HandlerMethod handlerMethod) {
 

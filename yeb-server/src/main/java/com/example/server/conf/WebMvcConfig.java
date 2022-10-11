@@ -61,7 +61,6 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         authorizeInterceptor.setAuthorizeDecider(hasAnyRoleAuthorizeDecider);
 
         if ("token".equals(contextType)) {
-
             setInterceptorPath(registry, tokenLoadingInterceptor);
         }
 
@@ -80,7 +79,8 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
      */
     private void setInterceptorPath(InterceptorRegistry registry, HandlerInterceptor handlerInterceptor) {
 
-        registry.addInterceptor(handlerInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(handlerInterceptor)
+                .addPathPatterns("/**")
                 .excludePathPatterns("/login")
                 .excludePathPatterns("/captcha")
                 .excludePathPatterns("/doc.html")
