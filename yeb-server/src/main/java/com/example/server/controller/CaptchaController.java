@@ -21,7 +21,6 @@ public class CaptchaController {
     @ApiOperation(value = "验证码")
     @GetMapping("/captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response) {
-        // 定义response输出类型为image/jpeg类型  
         response.setDateHeader("Expires", 0);
         // Set standard HTTP/1.1 no-cache headers.  
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");

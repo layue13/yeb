@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.mindrot:jbcrypt:0.4'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation 'cn.afterturn:easypoi-spring-boot-starter:4.4.0'
     implementation 'com.baomidou:mybatis-plus-generator:3.5.3'
     implementation 'com.google.code.kaptcha:kaptcha:2.3'
     implementation project(":yeb-common")
