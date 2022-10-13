@@ -17,6 +17,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -122,24 +123,17 @@ public class EmployeeController {
 
     @GetMapping("/export")
     public void export(HttpServletResponse response) {
-
-        // 1 查询需要导出的数据
+        response.setHeader("content-type", "application/octet-stream");
+        response.setHeader("content-disposition", "attachment;filename=" +
+                URLEncoder.encode("员工表.xls", Charset.defaultCharset()));
         List<Employee> employees = employeeService.getAllSimple();
-
-        // .xlsx .xlx
         ExportParams exportParams = new ExportParams("员工花名册", "员工信息", ExcelType.HSSF);
         Workbook sheets = ExcelExportUtil.exportExcel(exportParams, Employee.class, employees);
-
-        ServletOutputStream outputStream = null;
-        try {
-            response.setHeader("content-type", "application/octet-stream");
-            response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode("员工表.xls"));
-            outputStream = response.getOutputStream();
+        try (ServletOutputStream outputStream = response.getOutputStream()) {
             sheets.write(outputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }
